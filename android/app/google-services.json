@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "293533479968",
+    "firebase_url": "https://bankinfo-1ccde.firebaseio.com",
+    "project_id": "bankinfo-1ccde",
+    "storage_bucket": "bankinfo-1ccde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293533479968:android:9ce6a3e0b4d906b8477845",
+        "android_client_info": {
+          "package_name": "com.wahid.new_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293533479968-precvtl5ikkilk4guqb0b4m8miohqssf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7XAI3Nz5BpyKPfBIi3CeENs-hA0yxng8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293533479968-precvtl5ikkilk4guqb0b4m8miohqssf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:new_project/admin/login.dart';
 import 'package:new_project/bankInformation.dart';
-import 'package:new_project/search.dart';
 import 'package:new_project/branch.dart';
 
 void main() => runApp(MyApp());
@@ -27,13 +27,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
+  int count=0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.home),
+        leading: InkWell(
+          onTap: (){
+            setState(() {
+              if(count>2){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+              }
+              count++;
+            });
+          },
+            child: Icon(Icons.home)),
          actions: <Widget>[
            IconButton(icon: Icon(Icons.search), onPressed: (){
 
