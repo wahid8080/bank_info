@@ -1,10 +1,9 @@
 
 
-import 'dart:io';
 
 class ModelOfBank{
 
-  File imageFile;
+  String imageFile;
   String bankName;
   String bankTitle;
   String headOffice;
