@@ -22,7 +22,6 @@ class _AddBankState extends State<AddBank> {
   FirebaseUser user;
   FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
-  StorageReference reference = storage.ref().child("Images/bankImage");
 
   final DBRef = FirebaseDatabase.instance.reference();
 
@@ -262,6 +261,7 @@ class _AddBankState extends State<AddBank> {
                           var myData = ModelOfBank(imageFile: value,bankName: bankName,bankTitle: bankTitle,headOffice: headOffice,bankInfo: bankInfo);
                           print("second value"+myData.imageFile);
                           addBank(myData,imageFile);
+                          imageFile = null;
                         });
 
                       },
@@ -631,6 +631,7 @@ class _AddBankState extends State<AddBank> {
   }
 
   Future<String> _getImageUrl(File image)async{
+    StorageReference reference = storage.ref().child("Images").child('BankImage').child(DateTime.now().millisecondsSinceEpoch.toString());
     StorageUploadTask uploadTask = reference.putFile(image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String url = await taskSnapshot.ref.getDownloadURL();
