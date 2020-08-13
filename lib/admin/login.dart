@@ -27,141 +27,145 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Container(
-          alignment: Alignment.center,
-          child: ListView(
+      body: Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            children: [
-              Text(
-                'Email',
-                style: localText,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                height: 40,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    autofocus: false,
-                    autocorrect: false,
-                    textInputAction: TextInputAction.done,
-                    style: TextStyle(
-                        height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      alignLabelWithHint: true,
-                      prefixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Email',
+                  style: localText,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  height: 40,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: false,
+                      autocorrect: false,
+                      textInputAction: TextInputAction.done,
+                      style: TextStyle(
+                          height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        alignLabelWithHint: true,
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: emailController,
+                      onChanged: (text) {
+                        setState(() {
+                          email = text;
+                        });
+                      },
                     ),
-                    controller: emailController,
-                    onChanged: (text) {
-                      setState(() {
-                        email = text;
-                      });
-                    },
                   ),
                 ),
-              ),
-              (email == null && isEmpty)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          color: Colors.red,
-                          size: 12,
-                        ),
-                        Text(
-                          'Enter your email',
-                          style: errorText,
-                          textAlign: TextAlign.end,
-                        ),
-                      ],
-                    )
-                  : Container(),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Password',
-                style: localText,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                height: 40,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: TextField(
-                    keyboardType: TextInputType.visiblePassword,
-                    autofocus: false,
-                    autocorrect: false,
-                    textInputAction: TextInputAction.done,
-                    style: TextStyle(
-                        height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      alignLabelWithHint: true,
-                      border: OutlineInputBorder(),
+                (email == null && isEmpty)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                          Text(
+                            'Enter your email',
+                            style: errorText,
+                            textAlign: TextAlign.end,
+                          ),
+                        ],
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Password',
+                  style: localText,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  height: 40,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      autofocus: false,
+                      autocorrect: false,
+                      textInputAction: TextInputAction.done,
+                      style: TextStyle(
+                          height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock),
+                        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        alignLabelWithHint: true,
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: passwordController,
+                      onChanged: (text) {
+                        setState(() {
+                          password = text;
+                        });
+                      },
                     ),
-                    controller: passwordController,
-                    onChanged: (text) {
-                      setState(() {
-                        password = text;
-                      });
-                    },
                   ),
                 ),
-              ),
-              (password == null && isEmpty)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          color: Colors.red,
-                          size: 12,
-                        ),
-                        Text(
-                          'Enter your password',
-                          style: errorText,
-                          textAlign: TextAlign.end,
-                        ),
-                      ],
-                    )
-                  : Container(),
-              SizedBox(
-                height: 30,
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isEmpty = true;
-                  });
-                },
-                child: InkWell(
+                (password == null && isEmpty)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                          Text(
+                            'Enter your password',
+                            style: errorText,
+                            textAlign: TextAlign.end,
+                          ),
+                        ],
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 30,
+                ),
+                InkWell(
                   onTap: () {
-                    loginUser(email: email, password: password);
+                    setState(() {
+                      isEmpty = true;
+                    });
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.red, width: 2)),
-                    child: Text('Login', style: titleTextWhite),
+                  child: InkWell(
+                    onTap: () {
+                      loginUser(email: email, password: password);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.red, width: 2)),
+                      child: Text('Login', style: titleTextWhite),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
