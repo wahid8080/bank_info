@@ -76,9 +76,22 @@ class _BankInfoState extends State<BankInfo> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Type Of Account',style: TextStyle(fontSize: 18,color: Colors.green),),
-                            IconButton(icon: Icon(Icons.description,color: Colors.green,), onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount(bankName:bankName)));
-                            })
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.red,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
+                                  child: Text('Subscribe',style: TextStyle(color: Colors.white),),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Padding(

@@ -29,9 +29,8 @@ class _MyBranchDetailsState extends State<MyBranchDetails> {
               child: Container(
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(border: Border.all(color: Colors.red,width: 1)),
-                height: MediaQuery.of(context).size.height/5,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

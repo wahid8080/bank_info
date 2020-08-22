@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -89,6 +88,7 @@ class _AddBankState extends State<AddBank> {
     // TODO: implement initState
     faceData();
     getCurrentUser();
+    geoLocation();
     super.initState();
   }
 
@@ -887,17 +887,17 @@ class _AddBankState extends State<AddBank> {
                         });
                         var myData = ModelOfBankInfo(
                             selectedBank: selectBankName,
-                          currentAccount: currentAccount,
-                          salartAccount: salartAccount,
-                          studentAccount: studentAccount,
-                          saveingsAccount: saveingsAccount,
-                          foreignCurrencyAccount: foreignCurrencyAccount,
-                          depositLimitision: depositLimitision,
-                          depositLimitisionString: depositLimitisionString,
-                          withdrowLimitision: withdrowLimitision,
-                          withdrowLimitisionString: withdrowLimitisionString,
-                          interestLimitision: interestLimitision,
-                          interestLimitisionString: interestLimitisionString
+                            currentAccount: currentAccount,
+                            salartAccount: salartAccount,
+                            studentAccount: studentAccount,
+                            saveingsAccount: saveingsAccount,
+                            foreignCurrencyAccount: foreignCurrencyAccount,
+                            depositLimitision: depositLimitision,
+                            depositLimitisionString: depositLimitisionString,
+                            withdrowLimitision: withdrowLimitision,
+                            withdrowLimitisionString: withdrowLimitisionString,
+                            interestLimitision: interestLimitision,
+                            interestLimitisionString: interestLimitisionString
                         );
                         addBankInfo(myData);
                       },
@@ -1009,8 +1009,8 @@ class _AddBankState extends State<AddBank> {
 
   void addBranch(ModelOfBranch branch){
     DBRef.child("branchInfo").child(branch.selectBank).push().set({
-//      'lat' : branch.lat,
-//      'lang' : branch.lang,
+      'lat' : branch.lat,
+      'lang' : branch.lang,
       'selectBank' :branch.selectBank,
       'districtName': branch.districtName,
       'divisionName' : branch.divisionName,
@@ -1057,5 +1057,12 @@ class _AddBankState extends State<AddBank> {
         bankList.add(bankName);
       }
     });
+  }
+
+  void geoLocation()async{
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    lat = position.latitude;
+    lang = position.longitude;
+    print(position);
   }
 }
