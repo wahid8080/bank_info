@@ -78,7 +78,7 @@ class _BankInfoState extends State<BankInfo> {
                             Text('Type Of Account',style: TextStyle(fontSize: 18,color: Colors.green),),
                             InkWell(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount(bankName: bankName,)));
                               },
                               child: Container(
                                 alignment: Alignment.center,

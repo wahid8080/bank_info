@@ -1,5 +1,10 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:new_project/admin/model_of_Subscribe.dart';
+import 'package:toast/toast.dart';
 
 class CreateAccount extends StatefulWidget {
   String bankName;
@@ -13,8 +18,18 @@ class _CreateAccountState extends State<CreateAccount> {
   _CreateAccountState({this.bankName});
 
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   String email;
+  String name;
+  String description;
 
+
+  FirebaseUser user;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  static FirebaseStorage storage = FirebaseStorage.instance;
+
+  final DBRef = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +43,7 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: 20,),
             Container(
               child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.emailAddress,
                 autofocus: false,
                 autocorrect: false,
                 textInputAction: TextInputAction.done,
@@ -52,7 +67,7 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: 20,),
             Container(
               child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.name,
                 autofocus: false,
                 autocorrect: false,
                 textInputAction: TextInputAction.done,
@@ -65,10 +80,10 @@ class _CreateAccountState extends State<CreateAccount> {
                   border: OutlineInputBorder(),
                   hintText: 'User name',
                 ),
-                controller: emailController,
+                controller: nameController,
                 onChanged: (text){
                   setState(() {
-                    email = text;
+                    name = text;
                   });
                 },
               ),
@@ -76,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: 20,),
             Container(
               child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.name,
                 autofocus: false,
                 autocorrect: false,
                 textInputAction: TextInputAction.done,
@@ -89,10 +104,10 @@ class _CreateAccountState extends State<CreateAccount> {
                   border: OutlineInputBorder(),
                   hintText: 'Descreption',
                 ),
-                controller: emailController,
+                controller: descriptionController,
                 onChanged: (text){
                   setState(() {
-                    email = text;
+                    description = text;
                   });
                 },
               ),
@@ -100,7 +115,8 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: 20,),
             InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));
+                var myData = ModelOfSubscribe(email: email,userName: name,description: description);
+                addSubscribe(myData);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -118,5 +134,19 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+  void addSubscribe(ModelOfSubscribe modelOfSubscribe){
+    DBRef.child("Subscribe").child(bankName).push().set({
+
+      'email' :modelOfSubscribe.email,
+      'userName': modelOfSubscribe.userName,
+      'description' : modelOfSubscribe.description,
+
+    }).whenComplete(() {
+      Toast.show('Success', context);
+      setState(() {
+
+      });
+    });
   }
 }

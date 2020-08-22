@@ -7,6 +7,7 @@ import 'package:new_project/atm.dart';
 import 'package:new_project/bankInformation.dart';
 import 'package:new_project/branch.dart';
 import 'package:new_project/create_account.dart';
+import 'package:new_project/routing.dart';
 
 void main() => runApp(MyApp());
 
@@ -176,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             children: <Widget>[
                                               InkWell(
                                                 onTap: (){
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ATM()));
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ATM(bankName: _myBankList[position].bankName,)));
                                                 },
                                                 child: Container(
                                                   child: Row(
@@ -196,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               InkWell(
                                                 onTap: (){
-
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>RoutingList(bankName: _myBankList[position].bankName)));
                                                 },
                                                 child: Container(
                                                   child: Row(
@@ -219,10 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => Branch(
-                                                              bankName:
-                                                              _myBankList[position]
-                                                                  .bankName)));
+                                                          builder: (context) => Branch(bankName: _myBankList[position].bankName)));
                                                 },
                                                 child: Container(
                                                   child: Row(

@@ -56,7 +56,7 @@ class _BranchState extends State<Branch> {
             padding: const EdgeInsets.all(4.0),
             child: InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBranchDetails()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBranchDetails(bankName: bankName,address:_myBranch[position].branchAddress,lat:_myBranch[position].lat,lang:_myBranch[position].lang)));
               },
               child: Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.red,width: 1)),
@@ -68,6 +68,7 @@ class _BranchState extends State<Branch> {
                     children: <Widget>[
                       Text('Branch Name : ${_myBranch[position].branchName}',style: localTextTitle,),
                       Text('Address :${_myBranch[position].branchAddress} ${_myBranch[position].districtName}',style: TextStyle(color: Colors.green,fontSize: 16)),
+                      Text('phone :${_myBranch[position].phoneNumber}',style: TextStyle(color: Colors.green,fontSize: 16)),
                     ],
                   ),
                 ),

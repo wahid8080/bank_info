@@ -6,9 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:new_project/admin/model_of_ATM.dart';
 import 'package:new_project/admin/model_of_bank.dart';
 import 'package:new_project/admin/model_of_bank_info.dart';
 import 'package:new_project/admin/model_of_branch.dart';
+import 'package:new_project/admin/model_of_routing.dart';
 import 'package:new_project/google_map.dart';
 import 'package:new_project/theme_data/ThemeData.dart';
 import 'package:toast/toast.dart';
@@ -61,6 +63,8 @@ class _AddBankState extends State<AddBank> {
   bool addBranchBool = false;
   bool addAccountOfBank = false;
   bool addBabkInfoBool = false;
+  bool addATMBool = false;
+  bool addRouting = false;
   bool isLoading = true;
   bool isWorking = false;
   bool isWorking1 = false;
@@ -114,7 +118,7 @@ class _AddBankState extends State<AddBank> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Add Bank Information',style: localTextWhite,),
+                    Text('Add Bank',style: localTextWhite,),
                     IconButton(icon: (!addBankBool)?Icon(Icons.add,color: Colors.white,):Icon(Icons.clear,color: Colors.white), onPressed: (){
                       setState(() {
                         addBankBool = !addBankBool;
@@ -915,6 +919,400 @@ class _AddBankState extends State<AddBank> {
                 ),
               ),
             ):Container(),
+            SizedBox(height: 20,),
+            Container(
+              color: Colors.green,
+              height: 70,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Add ATM',style: localTextWhite,),
+                    IconButton(icon: (!addATMBool)?Icon(Icons.add,color: Colors.white,):Icon(Icons.clear,color: Colors.white), onPressed: (){
+                      setState(() {
+                        addATMBool = !addATMBool;
+                      });
+                    })
+                  ],
+                ),
+              ),
+            ),
+            (addATMBool)?Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3.0),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10),
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton(
+                              elevation: 0,
+                              iconSize: 24,
+                              isExpanded: true,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14),
+                              icon: Icon(Icons.arrow_drop_down_circle),
+                              hint: Text('Select Bank'),
+                              value: selectBankName,
+                              items: bankList.map((String value){
+                                return DropdownMenuItem<String>(child: Text(value),value: value,);
+                              }).toList(),
+                              onChanged: (value){
+                                setState(() {
+                                  selectBankName = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('Both name',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: districtNameController,
+                          onChanged: (text){
+                            setState(() {
+                              districtName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('Both No',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: divisionNameController,
+                          onChanged: (text){
+                            setState(() {
+                              divisionName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('Address',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: branchNameController,
+                          onChanged: (text){
+                            setState(() {
+                              branchName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('Phone',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: branchAddressController,
+                          onChanged: (text){
+                            setState(() {
+                              branchAddress = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    (isWorking1)?Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    ):InkWell(
+                      onTap: () {
+                        setState(() {
+                          isWorking1 = true;
+                        });
+                        var myData = ModelOfATM(
+                          lat: lat,
+                          lang: lang,
+                          bankName: selectBankName,
+                          bothName: districtName,
+                          bothNo: divisionName,
+                          address: branchName,
+                          phone: branchAddress,
+                        );
+                        addATM(myData);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Colors.red, width: 2)),
+                        child: Text('Save', style: titleTextWhite),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ):Container(),
+            SizedBox(height: 20,),
+            Container(
+              color: Colors.green,
+              height: 70,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Add Routing',style: localTextWhite,),
+                    IconButton(icon: (!addRouting)?Icon(Icons.add,color: Colors.white,):Icon(Icons.clear,color: Colors.white), onPressed: (){
+                      setState(() {
+                        addRouting = !addRouting;
+                      });
+                    })
+                  ],
+                ),
+              ),
+            ),
+            (addRouting)?Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3.0),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10),
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton(
+                              elevation: 0,
+                              iconSize: 24,
+                              isExpanded: true,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14),
+                              icon: Icon(Icons.arrow_drop_down_circle),
+                              hint: Text('Select Bank'),
+                              value: selectBankName,
+                              items: bankList.map((String value){
+                                return DropdownMenuItem<String>(child: Text(value),value: value,);
+                              }).toList(),
+                              onChanged: (value){
+                                setState(() {
+                                  selectBankName = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('From Branch',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: districtNameController,
+                          onChanged: (text){
+                            setState(() {
+                              districtName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('To Branch',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: divisionNameController,
+                          onChanged: (text){
+                            setState(() {
+                              divisionName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Text('Routing Number',style: localText,),
+                    SizedBox(height: 3,),
+                    Container(
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autofocus: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                              height: 1.5, fontSize: 12, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: branchNameController,
+                          onChanged: (text){
+                            setState(() {
+                              branchName = text;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    (isWorking1)?Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    ):InkWell(
+                      onTap: () {
+                        setState(() {
+                          isWorking1 = true;
+                        });
+                        var myData = ModelOfRouting(
+                          bankName: selectBankName,
+                          fromBranch: districtName,
+                          toBranch: divisionName,
+                          routingNumber: branchName,
+                        );
+                        addRoutingData(myData);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Colors.red, width: 2)),
+                        child: Text('Save', style: titleTextWhite),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ):Container(),
           ],
         ),
       ),
@@ -1002,7 +1400,7 @@ class _AddBankState extends State<AddBank> {
     }).whenComplete((){
       Toast.show('Data insert successfully', context);
       setState(() {
-        isWorking =false;
+        isWorking = false;
       });
     });
   }
@@ -1065,4 +1463,38 @@ class _AddBankState extends State<AddBank> {
     lang = position.longitude;
     print(position);
   }
+
+  void addATM(ModelOfATM modelOfATM){
+    DBRef.child("ATM_Both").child(modelOfATM.bankName).push().set({
+      'lat' : modelOfATM.lat,
+      'lang' : modelOfATM.lang,
+      'bankName' :modelOfATM.bankName,
+      'bothName': modelOfATM.bothName,
+      'bothNo' : modelOfATM.bothNo,
+      'address' : modelOfATM.address,
+      'phone' :modelOfATM.phone,
+    }).whenComplete(() {
+      Toast.show('Success', context);
+      setState(() {
+        isWorking1 = false;
+      });
+    });
+  }
+
+  void addRoutingData(ModelOfRouting modelOfRouting){
+    DBRef.child("Routing").child(modelOfRouting.bankName).push().set({
+
+      'bankName' :modelOfRouting.bankName,
+      'fromBranch': modelOfRouting.fromBranch,
+      'toBranch' : modelOfRouting.toBranch,
+      'routingNumber' : modelOfRouting.routingNumber,
+
+    }).whenComplete(() {
+      Toast.show('Success', context);
+      setState(() {
+        isWorking1 = false;
+      });
+    });
+  }
+
 }
