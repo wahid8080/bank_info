@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,6 +12,7 @@ import 'package:new_project/admin/model_of_bank.dart';
 import 'package:new_project/admin/model_of_bank_info.dart';
 import 'package:new_project/admin/model_of_branch.dart';
 import 'package:new_project/admin/model_of_routing.dart';
+import 'package:new_project/admin/view_account_subscription.dart';
 import 'package:new_project/google_map.dart';
 import 'package:new_project/theme_data/ThemeData.dart';
 import 'package:toast/toast.dart';
@@ -22,16 +24,18 @@ class AddBank extends StatefulWidget {
 
 class _AddBankState extends State<AddBank> {
 
-  FirebaseUser user;
+  User user;
   FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
-
-  final DBRef = FirebaseDatabase.instance.reference();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  CollectionReference collectionRef = FirebaseFirestore.instance.collection('BankName');
 
   TextEditingController bankNameController = TextEditingController();
   TextEditingController bankTitleController = TextEditingController();
   TextEditingController headOfficeController = TextEditingController();
   TextEditingController bankInfoController = TextEditingController();
+
+
   String bankName;
   String bankTitle;
   String bankInfo;
@@ -45,7 +49,6 @@ class _AddBankState extends State<AddBank> {
   TextEditingController branchAddressController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController routingNumberController = TextEditingController();
-
   TextEditingController depositLimitisionController = TextEditingController();
   TextEditingController withdrowLimitisionController = TextEditingController();
   TextEditingController interestLimitisionController = TextEditingController();
@@ -58,6 +61,8 @@ class _AddBankState extends State<AddBank> {
   String branchAddress;
   String phoneNumber;
   String routingNumber;
+
+
 
   bool addBankBool = false;
   bool addBranchBool = false;
@@ -92,20 +97,27 @@ class _AddBankState extends State<AddBank> {
     // TODO: implement initState
     faceData();
     getCurrentUser();
-    geoLocation();
+    //geoLocation();
     super.initState();
   }
 
 
   void getCurrentUser()async{
-    user = await auth.currentUser();
+    user = FirebaseAuth.instance.currentUser;
     print(user);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Information'),),
+      appBar: AppBar(
+        title: Text('Add Information'),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewAccountSubscription()));
+          }, icon: Icon(Icons.email)),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -508,7 +520,7 @@ class _AddBankState extends State<AddBank> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: TextField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.phone,
                           autofocus: false,
                           autocorrect: false,
                           textInputAction: TextInputAction.done,
@@ -537,7 +549,7 @@ class _AddBankState extends State<AddBank> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: TextField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           autofocus: false,
                           autocorrect: false,
                           textInputAction: TextInputAction.done,
@@ -1366,32 +1378,33 @@ class _AddBankState extends State<AddBank> {
   }
 
   _openGallery(BuildContext context) async{
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
+    ImagePicker imagePicker = new ImagePicker();
+    var picture = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      imageFile = picture;
+      imageFile = File(picture.path);
     });
     Navigator.of(context).pop();
   }
 
   _openCamera(BuildContext context) async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
+    ImagePicker imagePicker = new ImagePicker();
+    var picture = await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
-      imageFile = picture;
+      imageFile = File(picture.path);
     });
     Navigator.of(context).pop();
   }
 
   Future<String> _getImageUrl(File image)async{
-    StorageReference reference = storage.ref().child("Images").child('BankImage').child(DateTime.now().millisecondsSinceEpoch.toString());
-    StorageUploadTask uploadTask = reference.putFile(image);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    var reference = storage.ref().child("Images").child('BankImage').child(DateTime.now().millisecondsSinceEpoch.toString());
+    var uploadTask = reference.putFile(image);
+    var taskSnapshot = await uploadTask;
     String url = await taskSnapshot.ref.getDownloadURL();
     return url;
   }
 
-  void addBank(ModelOfBank bank,File imageFile){
-
-    DBRef.child("BankName").push().set({
+  void addBank(ModelOfBank bank,File imageFile)async{
+    await _firestore.collection('BankName').add({
       'imageFile' : bank.imageFile,
       'bankName' : bank.bankName,
       'bankTitle' : bank.bankTitle,
@@ -1405,8 +1418,8 @@ class _AddBankState extends State<AddBank> {
     });
   }
 
-  void addBranch(ModelOfBranch branch){
-    DBRef.child("branchInfo").child(branch.selectBank).push().set({
+  void addBranch(ModelOfBranch branch)async{
+    await _firestore.collection("branchInfo").add({
       'lat' : branch.lat,
       'lang' : branch.lang,
       'selectBank' :branch.selectBank,
@@ -1424,8 +1437,9 @@ class _AddBankState extends State<AddBank> {
     });
   }
 
-  void addBankInfo(ModelOfBankInfo bankInfo){
-    DBRef.child("BankInfoInfo").child(bankInfo.selectedBank).set({
+  void addBankInfo(ModelOfBankInfo bankInfo)async{
+
+    await _firestore.collection("BankInfoInfo").add({
       'selectedBank' :bankInfo.selectedBank,
       'currentAccount': bankInfo.currentAccount,
       'salartAccount' : bankInfo.salartAccount,
@@ -1446,26 +1460,28 @@ class _AddBankState extends State<AddBank> {
     });
   }
 
-  void faceData(){
+  void faceData()async{
     String bankName;
-    DBRef.child("BankName").once().then((DataSnapshot dataSnapshot){
-      for(var value in dataSnapshot.value.keys){
-        print(dataSnapshot.value[value]['bankName']);
-        bankName = dataSnapshot.value[value]['bankName'];
-        bankList.add(bankName);
-      }
-    });
-  }
+    QuerySnapshot querySnapshot =await collectionRef.get();
+    final allData = querySnapshot.docs;
 
-  void geoLocation()async{
-    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    lat = position.latitude;
-    lang = position.longitude;
-    print(position);
+    for(var items in allData){
+      print(items);
+      bankList.add(items['bankName']);
+    }
   }
+  //
+  // void geoLocation()async{
+  //   Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  //   lat = position.latitude;
+  //   lang = position.longitude;
+  //   print(position);
+  // }
 
-  void addATM(ModelOfATM modelOfATM){
-    DBRef.child("ATM_Both").child(modelOfATM.bankName).push().set({
+
+  void addATM(ModelOfATM modelOfATM)async{
+
+    await _firestore.collection("AtmInfo").add({
       'lat' : modelOfATM.lat,
       'lang' : modelOfATM.lang,
       'bankName' :modelOfATM.bankName,
@@ -1481,14 +1497,13 @@ class _AddBankState extends State<AddBank> {
     });
   }
 
-  void addRoutingData(ModelOfRouting modelOfRouting){
-    DBRef.child("Routing").child(modelOfRouting.bankName).push().set({
+  void addRoutingData(ModelOfRouting modelOfRouting)async{
 
+    await _firestore.collection("RoutingData").add({
       'bankName' :modelOfRouting.bankName,
       'fromBranch': modelOfRouting.fromBranch,
       'toBranch' : modelOfRouting.toBranch,
       'routingNumber' : modelOfRouting.routingNumber,
-
     }).whenComplete(() {
       Toast.show('Success', context);
       setState(() {

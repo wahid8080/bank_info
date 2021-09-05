@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "293533479968",
-    "firebase_url": "https://bankinfo-1ccde.firebaseio.com",
-    "project_id": "bankinfo-1ccde",
-    "storage_bucket": "bankinfo-1ccde.appspot.com"
+    "project_number": "390048613691",
+    "project_id": "bankinfo-be214",
+    "storage_bucket": "bankinfo-be214.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:293533479968:android:9ce6a3e0b4d906b8477845",
+        "mobilesdk_app_id": "1:390048613691:android:bb7711cf9fc4e4d465e31e",
         "android_client_info": {
           "package_name": "com.wahid.new_project"
         }
       },
       "oauth_client": [
         {
-          "client_id": "293533479968-precvtl5ikkilk4guqb0b4m8miohqssf.apps.googleusercontent.com",
+          "client_id": "390048613691-gelnljq3i7r3numh3qavuih42s1n3mfd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD7XAI3Nz5BpyKPfBIi3CeENs-hA0yxng8"
+          "current_key": "AIzaSyDuU-ZsIjMc7JgHtem-qq7mvamuIhwYDsg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "293533479968-precvtl5ikkilk4guqb0b4m8miohqssf.apps.googleusercontent.com",
+              "client_id": "390048613691-gelnljq3i7r3numh3qavuih42s1n3mfd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

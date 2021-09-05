@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,9 @@ class Branch extends StatefulWidget {
 }
 
 class _BranchState extends State<Branch> {
-  final DBRef = FirebaseDatabase.instance.reference();
+
+  CollectionReference collectionRef = FirebaseFirestore.instance.collection('branchInfo');
+
   bool isLoading = false;
 
   @override
@@ -29,7 +32,7 @@ class _BranchState extends State<Branch> {
       isLoading = true;
     });
 
-    await faceBranchData();
+    faceData();
 
     setState(() {
       isLoading = false;
@@ -79,25 +82,26 @@ class _BranchState extends State<Branch> {
       )
     );
   }
-  Future<void> faceBranchData()async{
-    await DBRef.child("branchInfo").child(bankName).once().then((DataSnapshot dataSnapshot){
-      for(var value in dataSnapshot.value.keys){
-        _myBranch.add(ModelOfBranch(
-          lat: 0.0,
-          lang: 0.0,
-          selectBank: dataSnapshot.value[value]['selectBank'],
-          districtName: dataSnapshot.value[value]['districtName'],
-          divisionName: dataSnapshot.value[value]['divisionName'],
-          branchName: dataSnapshot.value[value]['branchName'],
-          branchAddress: dataSnapshot.value[value]['branchAddress'],
-          phoneNumber: dataSnapshot.value[value]['phoneNumber'],
-          routingNumber: dataSnapshot.value[value]['routingNumber'],
-        ));
-        print(dataSnapshot.value[value]['bankName']);
-      }
-    }).whenComplete(() {
-      isLoading = false;
-    });
-  }
 
+  void faceData()async{
+
+    QuerySnapshot querySnapshot =await collectionRef.where('selectBank',isEqualTo: '$bankName').get();
+    final allData = querySnapshot.docs;
+
+    for(var items in allData){
+     setState(() {
+       _myBranch.add(ModelOfBranch(
+         lat: 0.0,
+         lang: 0.0,
+         selectBank: items['selectBank'],
+         districtName: items['districtName'],
+         divisionName: items['divisionName'],
+         branchName: items['branchName'],
+         branchAddress: items['branchAddress'],
+         phoneNumber: items['phoneNumber'],
+         routingNumber: items['routingNumber'],
+       ));
+     });
+    }
+  }
 }

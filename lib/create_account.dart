@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,11 +26,11 @@ class _CreateAccountState extends State<CreateAccount> {
   String description;
 
 
-  FirebaseUser user;
+  User user;
   FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
 
-  final DBRef = FirebaseDatabase.instance.reference();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +116,8 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: 20,),
             InkWell(
               onTap: (){
-                var myData = ModelOfSubscribe(email: email,userName: name,description: description);
-                addSubscribe(myData);
+                var myData = ModelOfSubscribe(email: email,userName: name,description: description,bankName: bankName);
+                subscriptionUser(myData);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -135,18 +136,17 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
-  void addSubscribe(ModelOfSubscribe modelOfSubscribe){
-    DBRef.child("Subscribe").child(bankName).push().set({
 
+  void subscriptionUser(ModelOfSubscribe modelOfSubscribe)async{
+
+    await _firestore.collection("bankSubscription").add({
       'email' :modelOfSubscribe.email,
       'userName': modelOfSubscribe.userName,
       'description' : modelOfSubscribe.description,
-
+      'BankName' : modelOfSubscribe.bankName,
     }).whenComplete(() {
       Toast.show('Success', context);
-      setState(() {
-
-      });
+      Navigator.pop(context);
     });
   }
 }

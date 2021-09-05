@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class ATM extends StatefulWidget {
 }
 
 class _ATMState extends State<ATM> {
-  final DBRef = FirebaseDatabase.instance.reference();
+  CollectionReference collectionRef = FirebaseFirestore.instance.collection('AtmInfo');
+
   bool isLoading = false;
 
   @override
@@ -30,7 +32,7 @@ class _ATMState extends State<ATM> {
       isLoading = true;
     });
 
-    await faceBranchData();
+    faceData();
 
     setState(() {
       isLoading = false;
@@ -82,23 +84,26 @@ class _ATMState extends State<ATM> {
     );
   }
 
-  Future<void> faceBranchData()async{
-    await DBRef.child("ATM_Both").child(bankName).once().then((DataSnapshot dataSnapshot){
-      for(var value in dataSnapshot.value.keys){
+  void faceData()async{
+
+    QuerySnapshot querySnapshot =await collectionRef.where('bankName',isEqualTo: bankName).get();
+    final allData = querySnapshot.docs;
+
+    print(allData.length);
+    for(var items in allData){
+
+      setState(() {
         _myATM_Both.add(ModelOfATM(
-          lat: dataSnapshot.value[value]['lat'],
-          lang: dataSnapshot.value[value]['lang'],
-          bankName : dataSnapshot.value[value]['bankName'],
-          bothName: dataSnapshot.value[value]['bothName'],
-          bothNo: dataSnapshot.value[value]['bothNo'],
-          address: dataSnapshot.value[value]['address'],
-          phone: dataSnapshot.value[value]['phone'],
+          lat: items['lat'],
+          lang: items['lang'],
+          bankName : items['bankName'],
+          bothName: items['bothName'],
+          bothNo: items['bothNo'],
+          address: items['address'],
+          phone: items['phone'],
         ));
-        print(dataSnapshot.value[value]['bankName']);
-      }
-    }).whenComplete(() {
-      isLoading = false;
-    });
+      });
+    }
   }
 
 }

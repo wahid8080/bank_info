@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class RoutingList extends StatefulWidget {
 }
 
 class _RoutingListState extends State<RoutingList> {
-  final DBRef = FirebaseDatabase.instance.reference();
+  CollectionReference collectionRef = FirebaseFirestore.instance.collection('RoutingData');
+
   bool isLoading = false;
 
   @override
@@ -30,7 +32,7 @@ class _RoutingListState extends State<RoutingList> {
       isLoading = true;
     });
 
-    await faceBranchData();
+    faceData();
 
     setState(() {
       isLoading = false;
@@ -76,20 +78,21 @@ class _RoutingListState extends State<RoutingList> {
       )
     );
   }
-  Future<void> faceBranchData()async{
-    await DBRef.child("Routing").child(bankName).once().then((DataSnapshot dataSnapshot){
-      for(var value in dataSnapshot.value.keys){
-        _myRouting.add(ModelOfRouting(
-          bankName: dataSnapshot.value[value]['bankName'],
-          fromBranch: dataSnapshot.value[value]['fromBranch'],
-          toBranch: dataSnapshot.value[value]['toBranch'],
-          routingNumber: dataSnapshot.value[value]['routingNumber'],
-        ));
-        print(dataSnapshot.value[value]['bankName']);
-      }
-    }).whenComplete(() {
-      isLoading = false;
-    });
-  }
 
+  void faceData()async{
+
+    QuerySnapshot querySnapshot =await collectionRef.where('bankName',isEqualTo: '$bankName').get();
+    final allData = querySnapshot.docs;
+
+    for(var items in allData){
+      setState(() {
+        _myRouting.add(ModelOfRouting(
+          bankName: items['bankName'],
+          fromBranch: items['fromBranch'],
+          toBranch: items['toBranch'],
+          routingNumber: items['routingNumber'],
+        ));
+      });
+    }
+  }
 }

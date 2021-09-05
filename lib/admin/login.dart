@@ -12,7 +12,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  FirebaseUser user;
+  User user;
 
   bool isEmpty = false;
   TextEditingController emailController = TextEditingController();
@@ -20,6 +20,14 @@ class _LoginState extends State<Login> {
 
   String email;
   String password;
+
+  @override
+  void initState() {
+    if(user!=null){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>AddBank()));
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,15 +180,13 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Future<FirebaseUser> loginUser({String email, String password}) async {
+  Future<User> loginUser({String email, String password}) async {
     try {
       var result = FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((value) {
-
             Navigator.push(context, MaterialPageRoute(builder: (context)=>AddBank()));
       });
     } catch (e) {
-      // throw the Firebase AuthException that we caught
-      throw new AuthException(e.code, e.message);
+      print(e);
     }
   }
 }

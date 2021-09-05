@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:new_project/admin/login.dart';
 import 'package:new_project/admin/model_of_bank.dart';
 import 'package:new_project/atm.dart';
@@ -9,7 +12,12 @@ import 'package:new_project/branch.dart';
 import 'package:new_project/create_account.dart';
 import 'package:new_project/routing.dart';
 
-void main() => runApp(MyApp());
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -32,7 +40,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final DBRef = FirebaseDatabase.instance.reference();
+  CollectionReference collectionRef = FirebaseFirestore.instance.collection('BankName');
+
   int count = 0;
   List<ModelOfBank> _myBankList = [];
 
@@ -88,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
         if (isLoading) {
           return Container(
             alignment: Alignment.center,
-            child: CircularProgressIndicator(),
+            //child: CircularProgressIndicator(),
+            child: Text("Loading..."),
           );
         }
 
@@ -124,13 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     IconButton(
                                         icon: Icon(Icons.info, color: Colors.grey),
                                         onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => BankInfo(
-                                                      bankName:
-                                                      _myBankList[position]
-                                                          .bankName)));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => BankInfo(bankName: _myBankList[position].bankName)));
                                         }),
                                   ],
                                 ),
@@ -304,20 +308,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> faceData() async {
-    await DBRef.child("BankName").once().then((DataSnapshot dataSnapshot) {
-      for (var value in dataSnapshot.value.keys) {
-        _myBankList.add(ModelOfBank(
-          imageFile: dataSnapshot.value[value]['imageFile'],
-          bankName: dataSnapshot.value[value]['bankName'],
-          bankTitle: dataSnapshot.value[value]['bankTitle'],
-          headOffice: dataSnapshot.value[value]['headOffice'],
-          bankInfo: dataSnapshot.value[value]['bankInfo'],
-        ));
-        print(dataSnapshot.value[value]['bankName']);
-      }
-    }).whenComplete(() {
-      isLoading = false;
-    });
+  void faceData()async{
+    String bankName;
+    QuerySnapshot querySnapshot =await collectionRef.get();
+    final allData = querySnapshot.docs;
+
+    for(var items in allData){
+      _myBankList.add(ModelOfBank(
+        imageFile: items['imageFile'],
+        bankName: items['bankName'],
+        bankTitle: items['bankTitle'],
+        headOffice: items['headOffice'],
+        bankInfo: items['bankInfo'],
+      ));
+    }
   }
 }
